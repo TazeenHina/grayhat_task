@@ -6,7 +6,33 @@ const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
-// GET all workshops
+/**
+ * @swagger
+ * /api/workshops:
+ *   get:
+ *     summary: Get all workshops
+ *     description: Fetch all workshops sorted by title
+ *     responses:
+ *       200:
+ *         description: A list of workshops
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: object
+ *                 properties:
+ *                   _id:
+ *                     type: string
+ *                   title:
+ *                     type: string
+ *                   description:
+ *                     type: string
+ *                   mentorId:
+ *                     type: string
+ *       500:
+ *         description: Error retrieving workshops
+ */
 router.get('/', async (req, res) => {
   try {
     const workshops = await Workshop.find().sort('title');
@@ -17,6 +43,44 @@ router.get('/', async (req, res) => {
 });
 
 // Create a new workshop (mentor only)
+/**
+ * @swagger
+ * /api/workshops:
+ *   post:
+ *     summary: Create a new workshop (mentor only)
+ *     description: Create a new workshop by a mentor
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Created workshop
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 _id:
+ *                   type: string
+ *                 title:
+ *                   type: string
+ *                 description:
+ *                   type: string
+ *                 mentorId:
+ *                   type: string
+ *       400:
+ *         description: Title and description are required
+ *       500:
+ *         description: Error creating workshop
+ */
 router.post('/', auth, checkRole('mentor'), async (req, res) => {
   // Validate input data
   const { title, description } = req.body;
@@ -30,7 +94,7 @@ router.post('/', auth, checkRole('mentor'), async (req, res) => {
     const workshop = new Workshop({
       title: req.body.title,
       description: req.body.description,
-      mentorId: req.user.id, // Ensure that the user is a mentor
+      mentorId: req.user._id, // Ensure that the user is a mentor
     });
 
     await workshop.save();

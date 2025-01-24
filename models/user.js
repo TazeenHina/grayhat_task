@@ -32,7 +32,16 @@ const userSchema = new mongoose.Schema({
     workshops:[{
         type:mongoose.Schema.Types.ObjectId,
         ref:'Workshop'
-    }]
+    }],
+    notificationPreferences: {
+        type: Map,
+        of: Boolean,
+        default: {
+            enrollment: true, // Notify when a learner enrolls
+            workshopUpdate: true, // Notify about workshop updates
+            newActivity: true, // Notify when new activities are added to a workshop
+        }
+    }
 });
 
 userSchema.methods.generateAuthToken = function(){
