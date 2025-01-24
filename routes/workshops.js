@@ -94,7 +94,7 @@ router.post('/', auth, checkRole('mentor'), async (req, res) => {
     const workshop = new Workshop({
       title: req.body.title,
       description: req.body.description,
-      mentorId: req.user.id, // Ensure that the user is a mentor
+      mentorId: req.user._id, // Ensure that the user is a mentor
     });
 
     await workshop.save();
