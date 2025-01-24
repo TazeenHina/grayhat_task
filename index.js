@@ -4,38 +4,14 @@ const Joi = require('joi');
 Joi.objectId = require('joi-objectid')(Joi);
 
 const swaggerUi = require('swagger-ui-express');
-const swaggerJSDoc = require('swagger-jsdoc');
+const swaggerSpecs = require('./swaggerConfig');
 const mongoose = require('mongoose');
 
 const express = require('express');
 const app = express();
 
-// Swagger setup
-const swaggerDefinition = {
-    openapi: '3.0.0',
-    info: {
-      title: 'Workshop API',
-      version: '1.0.0',
-      description: 'API documentation for the Workshop app',
-    },
-    servers: [
-      {
-        url: 'http://localhost:3000/api',
-      },
-    ],
-};
-
-// Options for swagger-jsdoc
-const options = {
-    swaggerDefinition,
-    apis: ['./routes/*.js'], // Path to the API docs (JSDoc comments in your routes)
-};
-
-// Initialize swagger-jsdoc
-const swaggerSpec = swaggerJSDoc(options);
-
-// Serve Swagger docs
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+// Middleware for Swagger
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpecs));
 
 const signup = require('./routes/signup');
 const workshops = require('./routes/workshops');

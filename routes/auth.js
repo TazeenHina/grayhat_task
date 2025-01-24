@@ -9,6 +9,42 @@ const express = require('express');
 const router = express.Router();
 
 
+/**
+ * @swagger
+ * /api/auth:
+ *   post:
+ *     summary: Authenticate users (learners/mentors) via JWT
+ *     description: Authenticates a user and generates a JSON Web Token (JWT).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 description: The user's email address
+ *                 example: user@example.com
+ *               password:
+ *                 type: string
+ *                 description: The user's password
+ *                 example: secret123
+ *     responses:
+ *       200:
+ *         description: Successfully authenticated and returns a JWT token.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 token:
+ *                   type: string
+ *                   description: JWT token for authenticated user
+ *       400:
+ *         description: Invalid email or password
+ */
+
 router.post('/', async (req, res) => {
   const { error } = validate(req.body); 
   if (error) return res.status(400).send(error.details[0].message);
